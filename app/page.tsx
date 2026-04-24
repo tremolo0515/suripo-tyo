@@ -77,11 +77,10 @@ export default function Home() {
       <header className="sticky top-0 z-10 bg-cream/90 backdrop-blur-sm border-b-2 border-dashed border-brown/30 px-4 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <span className="text-lg">💤</span>
             <h1 className="font-heading text-base text-brown-dark tracking-wide">
               スリポやりくり帳
             </h1>
-            <span className="text-base">🌙</span>
+
           </div>
           {cartItemCount > 0 && (
             <div className="flex items-center gap-1 bg-lavender/60 rounded-full px-3 py-1 border border-dashed border-purple-300">

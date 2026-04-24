@@ -18,11 +18,9 @@ export default function MonthHeader({ yearMonth, balance, carryOver, onPrev, onN
 
       {/* title row */}
       <div className="flex items-center justify-center gap-2 pt-3 pb-1 px-4">
-        <span className="text-xl">💤</span>
         <h1 className="font-heading text-xl text-brown-dark tracking-wide">
           スリポやりくり帳
         </h1>
-        <span className="text-xl">🌙</span>
       </div>
 
       {/* month navigator */}

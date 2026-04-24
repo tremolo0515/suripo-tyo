@@ -26,18 +26,15 @@ function ItemRow({ item, qty, onIncrement, onDecrement }: {
 }) {
   const isSelected = qty > 0;
   return (
-    <div className={`flex items-center gap-2 px-3 py-2 transition-colors ${isSelected ? "bg-lavender/20" : ""}`}>
+    <div className={`flex items-center gap-2 px-3 py-1 transition-colors ${isSelected ? "bg-lavender/20" : ""}`}>
       <div className="flex-1 min-w-0 flex items-center gap-1.5">
         <span className={`text-xs truncate ${isSelected ? "text-purple-800 font-medium" : "text-brown-dark"}`}>
           {item.name}
         </span>
-        {isSelected && (
-          <span className="text-[10px] text-purple-600 font-heading shrink-0">→ {formatSP(item.sp * qty)} SP</span>
-        )}
+        <span className="text-[10px] font-heading shrink-0 tabular-nums text-purple-600">
+          {isSelected ? `→ ${formatSP(item.sp * qty)} SP` : `${formatSP(item.sp)} SP`}
+        </span>
       </div>
-      <span className="font-heading text-xs text-purple-700 w-16 text-right shrink-0 tabular-nums">
-        {formatSP(item.sp)} SP
-      </span>
       <div className="flex items-center gap-1 shrink-0">
         <button
           onClick={() => onDecrement(item)}

@@ -25,7 +25,7 @@ export default function BalanceScale({ supply, spend }: Props) {
     <div className="mx-3 my-2">
       <div className="flex items-center gap-2 mb-2 px-1">
         <span className="text-sm">⚖️</span>
-        <h2 className="font-heading text-base text-brown-dark">SP バランス</h2>
+        <h2 className="font-heading text-base text-brown-dark">SP残量</h2>
         <div className="flex-1 border-t-2 border-dashed border-brown/40" />
       </div>
 
