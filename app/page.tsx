@@ -1,65 +1,136 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import {
+  currentYearMonth,
+  prevMonth,
+  nextMonth,
+  formatYearMonth,
+  daysInMonth,
+  theoreticalSP,
+  formatSP,
+} from "./lib/calc";
+import { NORMAL_ITEMS, PREMIUM_ITEMS } from "./lib/items";
+import type { ExchangeItem, CartItem } from "./lib/types";
+import IncomeSetup from "./components/IncomeSetup";
+import BalanceScale from "./components/BalanceScale";
+import ExchangeList from "./components/ExchangeList";
 
 export default function Home() {
+  const [ym, setYm] = useState(currentYearMonth());
+  const [hasPremium, setHasPremium] = useState(false);
+  const [supply, setSupply] = useState(() =>
+    theoreticalSP(false, daysInMonth(currentYearMonth()))
+  );
+  const [cart, setCart] = useState<Map<string, CartItem>>(new Map());
+
+  const days = daysInMonth(ym);
+  const theoretical = theoreticalSP(hasPremium, days);
+
+  const spendTotal = [...cart.values()].reduce(
+    (s, c) => s + c.sp * c.quantity,
+    0
+  );
+
+  function handleTogglePremium() {
+    const next = !hasPremium;
+    setHasPremium(next);
+    setSupply(theoreticalSP(next, days));
+  }
+
+  function changeMonth(newYm: string) {
+    setYm(newYm);
+    setSupply(theoreticalSP(hasPremium, daysInMonth(newYm)));
+    setCart(new Map());
+  }
+
+  function handleIncrement(item: ExchangeItem) {
+    setCart((prev) => {
+      const next = new Map(prev);
+      const qty = next.get(item.name)?.quantity ?? 0;
+      if (qty < item.limit) {
+        next.set(item.name, { ...item, quantity: qty + 1 });
+      }
+      return next;
+    });
+  }
+
+  function handleDecrement(item: ExchangeItem) {
+    setCart((prev) => {
+      const next = new Map(prev);
+      const existing = next.get(item.name);
+      if (!existing) return next;
+      if (existing.quantity <= 1) {
+        next.delete(item.name);
+      } else {
+        next.set(item.name, { ...existing, quantity: existing.quantity - 1 });
+      }
+      return next;
+    });
+  }
+
+  const cartItemCount = [...cart.values()].reduce((s, c) => s + c.quantity, 0);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="pb-4">
+      {/* ── App header ── */}
+      <header className="sticky top-0 z-10 bg-cream/90 backdrop-blur-sm border-b-2 border-dashed border-brown/30 px-4 py-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <span className="text-lg">💤</span>
+            <h1 className="font-heading text-base text-brown-dark tracking-wide">
+              スリポやりくり帳
+            </h1>
+            <span className="text-base">🌙</span>
+          </div>
+          {cartItemCount > 0 && (
+            <div className="flex items-center gap-1 bg-lavender/60 rounded-full px-3 py-1 border border-dashed border-purple-300">
+              <span className="text-xs font-heading text-purple-700">
+                🛒 {formatSP(spendTotal)} SP
+              </span>
+            </div>
+          )}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        {/* Month nav */}
+        <div className="flex items-center justify-center gap-3 mt-1.5">
+          <button
+            onClick={() => changeMonth(prevMonth(ym))}
+            className="flex items-center justify-center w-9 h-9 rounded-full border-2 border-dashed border-brown/40 bg-yellow/50 text-brown-dark font-heading active:scale-90 transition-transform"
+            aria-label="前の月"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            ◀
+          </button>
+          <span className="font-heading text-lg text-brown-dark min-w-[8rem] text-center">
+            {formatYearMonth(ym)}
+          </span>
+          <button
+            onClick={() => changeMonth(nextMonth(ym))}
+            className="flex items-center justify-center w-9 h-9 rounded-full border-2 border-dashed border-brown/40 bg-yellow/50 text-brown-dark font-heading active:scale-90 transition-transform"
+            aria-label="次の月"
           >
-            Documentation
-          </a>
+            ▶
+          </button>
         </div>
-      </main>
+      </header>
+
+      {/* ── Sections ── */}
+      <IncomeSetup
+        hasPremium={hasPremium}
+        supply={supply}
+        theoreticalMax={theoretical}
+        days={days}
+        onTogglePremium={handleTogglePremium}
+        onSetSupply={setSupply}
+      />
+
+      <BalanceScale supply={supply} spend={spendTotal} />
+
+      <ExchangeList
+        cart={cart}
+        onIncrement={handleIncrement}
+        onDecrement={handleDecrement}
+      />
     </div>
   );
 }

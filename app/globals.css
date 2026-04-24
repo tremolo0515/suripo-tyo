@@ -1,26 +1,81 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-cream:    #FFF8F0;
+  --color-mint:     #B2EBD9;
+  --color-lavender: #D4C5F9;
+  --color-pink:     #FFD6E0;
+  --color-yellow:   #FFF3B0;
+  --color-brown:    #C8A96E;
+  --color-brown-dark: #A0784A;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background-color: #e8ddd0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #FFF8F0;
+  background-image:
+    radial-gradient(circle, #d9c4a880 1px, transparent 1px);
+  background-size: 18px 18px;
+  font-family: var(--font-kosugi-maru), 'Kosugi Maru', sans-serif;
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100svh;
 }
+
+.font-heading {
+  font-family: var(--font-dot-gothic), 'DotGothic16', monospace;
+}
+
+/* ── flash animation for new ledger row ── */
+@keyframes flash {
+  0%, 100% { background-color: transparent; }
+  40%       { background-color: #FFF3B0; }
+}
+.animate-flash {
+  animation: flash 0.7s ease 2;
+}
+
+/* ── range input ── */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 10px;
+  border-radius: 99px;
+  outline: none;
+  cursor: pointer;
+  border: 2px dashed #C8A96E;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #FFD6E0;
+  border: 3px solid #D4C5F9;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: transform 0.1s;
+}
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(1.2);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #FFD6E0;
+  border: 3px solid #D4C5F9;
+  cursor: pointer;
+}
+
+/* ── scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: #D4C5F9; border-radius: 99px; }
