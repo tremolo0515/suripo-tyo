@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  formatSP,
-  DAILY_SP_NORMAL,
-  DAILY_SP_PREMIUM,
-  GOOD_SLEEP_BONUS,
-  PREMIUM_CONTINUATION_BONUS,
-} from "../lib/calc";
+import { formatSP, DAILY_SP_NORMAL, DAILY_SP_PREMIUM, GOOD_SLEEP_BONUS, PREMIUM_CONTINUATION_BONUS } from "../lib/calc";
 
 interface Props {
   hasPremium: boolean;
@@ -21,19 +15,17 @@ export default function IncomeSetup({
   hasPremium,
   supply,
   theoreticalMax,
-  days,
   onTogglePremium,
   onSetSupply,
 }: Props) {
   const isDirty = supply !== theoreticalMax;
   const daily = hasPremium ? DAILY_SP_PREMIUM : DAILY_SP_NORMAL;
-  const fixedBonus = GOOD_SLEEP_BONUS + (hasPremium ? PREMIUM_CONTINUATION_BONUS : 0);
 
   return (
     <div className="mx-3 my-2">
       <div className="flex items-center gap-2 mb-2 px-1">
         <span className="text-sm">💰</span>
-        <h2 className="font-heading text-base text-brown-dark">月間SP見込み</h2>
+        <h2 className="font-heading text-base text-brown-dark">SP獲得量</h2>
         <div className="flex-1 border-t-2 border-dashed border-brown/40" />
       </div>
 
@@ -62,7 +54,7 @@ export default function IncomeSetup({
             role="switch"
             aria-checked={hasPremium}
             className={[
-              "relative shrink-0 flex items-center h-8 w-[3.5rem] rounded-full px-1",
+              "relative shrink-0 flex items-center h-8 w-14 rounded-full px-1",
               "border-2 border-dashed transition-colors duration-300 focus:outline-none",
               hasPremium
                 ? "bg-lavender border-purple-400"
@@ -117,10 +109,6 @@ export default function IncomeSetup({
             </button>
           </div>
 
-          <p className="text-[10px] text-brown/50 text-center">
-            理論値: {formatSP(theoreticalMax)} SP
-            （{days}日 × {daily}pt + ボーナス{formatSP(fixedBonus)}pt）
-          </p>
         </div>
       </div>
     </div>
