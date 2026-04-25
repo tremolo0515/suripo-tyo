@@ -5,6 +5,7 @@ import { formatSP } from "../lib/calc";
 import type { ExchangeItem, CartItem } from "../lib/types";
 
 interface Props {
+  hasPremium: boolean;
   cart: Map<string, CartItem>;
   onIncrement: (item: ExchangeItem) => void;
   onDecrement: (item: ExchangeItem) => void;
@@ -19,23 +20,24 @@ interface SectionProps {
   onDecrement: (item: ExchangeItem) => void;
 }
 
-function ItemRow({ item, qty, onIncrement, onDecrement }: {
+function ItemRow({ item, qty, locked, onIncrement, onDecrement }: {
   item: ExchangeItem;
   qty: number;
+  locked?: boolean;
   onIncrement: (item: ExchangeItem) => void;
   onDecrement: (item: ExchangeItem) => void;
 }) {
   const isSelected = qty > 0;
   return (
     <div className={`flex items-center gap-1 px-2 py-1 transition-colors ${isSelected ? "bg-lavender/20" : ""}`}>
-      <span className={`flex-1 min-w-0 text-[11px] truncate ${isSelected ? "text-purple-800 font-medium" : "text-brown-dark"}`}>
+      <span className={`flex-1 min-w-0 truncate ${item.name.length > 9 ? "text-[9px]" : "text-[11px]"} ${isSelected ? "text-purple-800 font-medium" : "text-brown-dark"}`}>
         {item.name}
       </span>
       <div className="flex items-center gap-0.5 shrink-0">
         <button
           onClick={() => onDecrement(item)}
-          disabled={qty === 0}
-          className="flex items-center justify-center w-6 h-6 rounded-md border border-dashed border-pink/70 bg-pink/20 text-red-600 font-heading text-xs disabled:opacity-25 active:scale-90 transition-transform"
+          disabled={qty === 0 || locked}
+          className={`flex items-center justify-center w-6 h-6 rounded-md border border-dashed font-heading text-xs disabled:opacity-25 active:scale-90 transition-transform ${locked ? "border-gray-400 bg-gray-200 text-gray-500" : "border-pink/70 bg-pink/20 text-red-600"}`}
           aria-label="減らす"
         >−</button>
         <span className={`w-5 text-center font-heading text-[11px] tabular-nums ${isSelected ? "text-purple-800" : "text-brown/40"}`}>
@@ -43,8 +45,8 @@ function ItemRow({ item, qty, onIncrement, onDecrement }: {
         </span>
         <button
           onClick={() => onIncrement(item)}
-          disabled={qty >= item.limit}
-          className="flex items-center justify-center w-6 h-6 rounded-md border border-dashed border-mint/70 bg-mint/20 text-green-700 font-heading text-xs disabled:opacity-25 active:scale-90 transition-transform"
+          disabled={qty >= item.limit || locked}
+          className={`flex items-center justify-center w-6 h-6 rounded-md border border-dashed font-heading text-xs disabled:opacity-25 active:scale-90 transition-transform ${locked ? "border-gray-400 bg-gray-200 text-gray-500" : "border-mint/70 bg-mint/20 text-green-700"}`}
           aria-label="増やす"
         >＋</button>
       </div>
@@ -88,7 +90,7 @@ function Section({ title, emoji, items, cart, onIncrement, onDecrement }: Sectio
   );
 }
 
-export default function ExchangeList({ cart, onIncrement, onDecrement }: Props) {
+export default function ExchangeList({ hasPremium, cart, onIncrement, onDecrement }: Props) {
   return (
     <div className="mx-3 my-2 mb-8">
       <div className="flex items-center gap-2 mb-2 px-1">
@@ -107,14 +109,39 @@ export default function ExchangeList({ cart, onIncrement, onDecrement }: Props) 
           onDecrement={onDecrement}
         />
         <div className="border-t-2 border-dashed border-brown/30" />
-        <Section
-          title="プレミアム交換所"
-          emoji="💎"
-          items={PREMIUM_ITEMS}
-          cart={cart}
-          onIncrement={onIncrement}
-          onDecrement={onDecrement}
-        />
+        <div>
+          <div className="px-3 py-1.5 bg-lavender/30 border-b border-dashed border-brown/20 flex items-center justify-between">
+            <span className="font-heading text-[11px] text-purple-800">💎 プレミアム交換所</span>
+            {hasPremium && (() => {
+              const total = PREMIUM_ITEMS.reduce((s, item) => s + item.sp * (cart.get(item.name)?.quantity ?? 0), 0);
+              return total > 0 ? <span className="font-heading text-[11px] text-purple-700 tabular-nums">{formatSP(total)} SP</span> : null;
+            })()}
+          </div>
+          <div className="relative">
+            <div className="grid grid-cols-2">
+              {PREMIUM_ITEMS.map((item, i) => (
+                <div
+                  key={item.name}
+                  className={[
+                    i % 2 === 1 ? "border-l border-dashed border-brown/15" : "",
+                    i >= 2 ? "border-t border-dashed border-brown/15" : "",
+                  ].join(" ")}
+                >
+                  <ItemRow
+                    item={item}
+                    qty={cart.get(item.name)?.quantity ?? 0}
+                    locked={!hasPremium}
+                    onIncrement={onIncrement}
+                    onDecrement={onDecrement}
+                  />
+                </div>
+              ))}
+            </div>
+            {!hasPremium && (
+              <div className="absolute inset-0 bg-gray-400/30 pointer-events-auto" aria-hidden />
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

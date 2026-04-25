@@ -74,7 +74,7 @@ export default function IncomeSetup({
         {/* SP amount control */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="font-heading text-xs text-brown-dark">今月の入手SP予定</span>
+            <span className="font-heading text-xs text-brown-dark">今月の入手SP</span>
             {isDirty && (
               <button
                 onClick={() => onSetSupply(theoreticalMax)}

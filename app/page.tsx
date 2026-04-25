@@ -78,7 +78,7 @@ export default function Home() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <h1 className="font-heading text-base text-brown-dark tracking-wide">
-              スリポやりくり帳
+          スリープポイントやりくり帳
             </h1>
 
           </div>
@@ -126,6 +126,7 @@ export default function Home() {
       <BalanceScale supply={supply} spend={spendTotal} />
 
       <ExchangeList
+        hasPremium={hasPremium}
         cart={cart}
         onIncrement={handleIncrement}
         onDecrement={handleDecrement}

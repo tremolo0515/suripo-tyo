@@ -3,6 +3,7 @@ import type { ExchangeItem } from "./types";
 // Sorted by wiki priority: ◎ → ◯ → △ → ×
 export const NORMAL_ITEMS: ExchangeItem[] = [
   { name: "フィールドいどうチケット", sp: 100, limit: 1 },   // ◎
+  { name: "マスターサブレ", sp: 4000, limit: 1 },            // △
   { name: "ポケサブレ", sp: 150, limit: 30 },                // ◯
   { name: "メインスキルのたね", sp: 3600, limit: 1 },        // ◯
   { name: "EXチケット", sp: 200, limit: 3 },                 // ◯
@@ -14,7 +15,6 @@ export const NORMAL_ITEMS: ExchangeItem[] = [
   { name: "めざめいし", sp: 1400, limit: 5 },                // ◯ 他入手手段なし
   { name: "するどいツメ", sp: 1400, limit: 5 },              // ◯ 他入手手段なし
   { name: "まんまるいし", sp: 1400, limit: 5 },              // ◯ 他入手手段なし
-  { name: "マスターサブレ", sp: 4000, limit: 1 },            // △
   { name: "おてつだいホイッスル", sp: 800, limit: 3 },       // △
   { name: "食材チケットM", sp: 600, limit: 3 },              // △
   { name: "ばんのうアメS", sp: 140, limit: 15 },             // △
