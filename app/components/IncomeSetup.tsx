@@ -29,60 +29,43 @@ export default function IncomeSetup({
         <div className="flex-1 border-t-2 border-dashed border-brown/40" />
       </div>
 
-      <div className="rounded-2xl border-2 border-dashed border-brown bg-cream shadow-sm p-4 space-y-4">
-        {/* Premium pass toggle */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="font-heading text-sm text-brown-dark">💎 プレミアムパス</p>
-            <p className="text-[11px] text-brown/60 mt-0.5 leading-snug">
-              {hasPremium ? (
-                <>
-                  {daily}pt/日 + 継続特典{formatSP(PREMIUM_CONTINUATION_BONUS)}pt
-                  + グッドスリープ{formatSP(GOOD_SLEEP_BONUS)}pt
-                </>
-              ) : (
-                <>
-                  {daily}pt/日 + グッドスリープ{formatSP(GOOD_SLEEP_BONUS)}pt
-                </>
-              )}
-            </p>
-          </div>
-
-          {/* iOS-style toggle */}
-          <button
-            onClick={onTogglePremium}
-            role="switch"
-            aria-checked={hasPremium}
-            className={[
-              "relative shrink-0 flex items-center h-8 w-14 rounded-full px-1",
-              "border-2 border-dashed transition-colors duration-300 focus:outline-none",
-              hasPremium
-                ? "bg-lavender border-purple-400"
-                : "bg-brown/10 border-brown/30",
-            ].join(" ")}
-          >
-            <span
-              className={[
-                "block h-5 w-5 rounded-full bg-white shadow-md",
-                "transition-transform duration-300",
-                hasPremium ? "translate-x-6" : "translate-x-0",
-              ].join(" ")}
-            />
-          </button>
-        </div>
-
+      <div className="rounded-2xl border-2 border-dashed border-brown bg-cream shadow-sm px-4 py-3 space-y-2">
         {/* SP amount control */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="font-heading text-xs text-brown-dark">今月の入手SP</span>
-            {isDirty && (
-              <button
-                onClick={() => onSetSupply(theoreticalMax)}
-                className="text-[11px] text-purple-600 underline underline-offset-2"
-              >
-                ↩ 理論値に戻す
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {isDirty && (
+                <button
+                  onClick={() => onSetSupply(theoreticalMax)}
+                  className="text-[11px] text-purple-600 underline underline-offset-2"
+                >
+                  ↩ 理論値に戻す
+                </button>
+              )}
+              {/* プレパス トグル */}
+              <div className="flex items-center gap-1">
+                <span className="font-heading text-[11px] text-brown-dark">プレパス</span>
+                <button
+                  onClick={onTogglePremium}
+                  role="switch"
+                  aria-checked={hasPremium}
+                  className={[
+                    "relative flex items-center h-5 w-9 rounded-full px-0.5",
+                    "border border-dashed transition-colors duration-300 focus:outline-none",
+                    hasPremium ? "bg-lavender border-purple-400" : "bg-brown/10 border-brown/30",
+                  ].join(" ")}
+                >
+                  <span
+                    className={[
+                      "block h-3.5 w-3.5 rounded-full bg-white shadow-sm",
+                      "transition-transform duration-300",
+                      hasPremium ? "translate-x-4" : "translate-x-0",
+                    ].join(" ")}
+                  />
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="flex items-center gap-2 min-w-0">

@@ -13,7 +13,14 @@ export interface AppData {
   entries: Entry[];
 }
 
+export interface MonthData {
+  supply: number;
+  spend: number;
+  carryover: number;
+}
+
 export interface ExchangeItem {
+  id: string;
   name: string;
   sp: number;
   limit: number;
